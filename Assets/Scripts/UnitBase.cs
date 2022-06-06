@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum Side
 {
@@ -9,6 +10,8 @@ public enum Side
 
 public class UnitBase : MonoBehaviour
 {
+    public MainMenu MainMenu;
+    
     public List<Vector2> MoveVariants;
     public List<Vector2> AttackVariants;
 
@@ -17,12 +20,13 @@ public class UnitBase : MonoBehaviour
     public int Health = 10;
     public int Damage = 2;
 
+    [SerializeField] private Cell _currentCell;
+
     [SerializeField] private GridIteract _gridIteract;
 
     [HideInInspector] public List<Cell> Variants = new List<Cell>();
 
-    [SerializeField] private Cell _currentCell;
-
+  
     public void GoToCell(Cell cell)
     {
         if (cell.Unit == null)
@@ -69,8 +73,11 @@ public class UnitBase : MonoBehaviour
     {
         _currentCell.Unit = null;
 
+        gameObject.SetActive(false);
         Destroy(gameObject);
     }
+
+    private void OnDestroy() => MainMenu.WinSide();
 
     [ContextMenu("Initialize")]
     public void InitializeCell()
